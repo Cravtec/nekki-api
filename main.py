@@ -1,11 +1,18 @@
 from fastapi import FastAPI
-from apps import models
-from apps.database import engine, Base
+from fastapi.middleware.cors import CORSMiddleware
+
+from apps.database import Base, engine
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
+origins = ["http://localhost:3000", "localhost:3000", "http://localhost", "localhost"]
+
+app.add_middleware(
+    CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
+)
+
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World!"}
+    return {"message": "Hello from FastAPI!"}
